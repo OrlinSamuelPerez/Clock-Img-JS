@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Clock Js</title>
+</head>
+<body >
+    <style>
+        body{
+            background:black;
+            color:#fff;
+            font-weight: bold;
+            font-family:monospace;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+
+        }
+        .Reloj{
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background-position: center;
+            background-size: cover;
+            transition: 1s;
+            background-image: url("https://pixabay.com/get/g15540d8e83b7d02692c0d27d791c2eaa3d916db4b139308bf4176df80031fa3f0a2a82812d1b24192ddab159f2dfd7d00554e4c3e748fc96e7e06dbbcfcf4af_1280.jpg");
+        }
+        .Año-main{
+            padding-top:120px;
+            font-size: 20px;
+
+        }
+        .info-Reloj{
+            height: 100%;
+            background-color:rgba(2, 21, 83, 0.411);
+        }
+        .Hora-main{
+            font-size: 100px;
+
+        }
+    
+        .card-modal{
+            border-radius: 15px;
+            width: 330px;
+            height: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            background-color: white;
+        }
+        .modal{
+            position:fixed;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.616);
+        }
+        .modal-none{
+            display: none;
+        }
+        .grid-form{
+            display: grid;
+            width: 100%;
+            gap: 10px;
+            padding: 10px;
+            grid-template-columns: 147px 147px;
+        }
+        .grid-form img{
+            width: 100%;
+            cursor: pointer;
+
+            border-radius: 15px;
+        }
+        .grid-form img:active{
+            transform: scale(.9);
+        }
+        .input-text{
+            border-radius: 15px;
+
+            width: 75.5%;
+            padding: 35px;
+            text-align: center;
+            border: none;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        input::placeholder{
+            font-family: monospace;
+        }
+        .input-submit{
+            padding: 13px 30px;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.452);
+            background-color: rgb(7, 7, 116);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+
+        }
+        .input-submit:active{
+            transform: scale(.9);
+        }
+        .card-modal span{
+            color: black;
+            font-weight: bold;
+            font-size:23px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        @media (max-width:500px){
+            .Hora-main{
+                font-size: 60px;
+            }
+
+            
+        }
+    </style>
+    <div class="Reloj" id="RelojFoto">
+        <div class="info-Reloj">
+            <div id="Reloj"></div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="card-modal">
+            <form>
+                <input id="input-text" class="input-text" type="text" placeholder="Fotos que quieres ver"/>
+                <input id="submitText" class="input-submit" type="submit" value="OK"/>
+            </form>
+            <span>O elige ¿que quieres ver?</span>
+            <div class="grid-form">
+                <div id="img-1">
+                    <img src="https://images.pexels.com/photos/551628/pexels-photo-551628.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"/>
+                </div>
+                <div id="img-2">
+                    <img src="https://images.pexels.com/photos/1028707/pexels-photo-1028707.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"/>
+                </div>
+                <div id="img-3">
+                    <img src="https://images.pexels.com/photos/2433467/pexels-photo-2433467.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"/>
+                </div>
+                <div id="img-4">
+                    <img src="https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script >
+        const main = async (valorImagenes)=>{
+            var API_KEY = '19566722-ad1859f30b9e5cc39e00508a9';
+            var URL = "https://pixabay.com/api/?key="+API_KEY+"&q="+encodeURIComponent(valorImagenes);
+            const RelojFoto = document.getElementById("RelojFoto");
+            const DATA =[]
+            await fetch(URL)
+            .then(response => response.json())
+            .then(async data=>{
+             data.hits.forEach(img=>{
+                    DATA.push({...img})
+                    
+                })
+                const modal = document.getElementById("modal")
+                modal.classList.toggle("modal-none")
+                let contador = 0;
+                setInterval(()=>{
+                    console.log(DATA.length)
+                    if (contador < DATA.length){
+                        RelojFoto.style.cssText=`background-image: url(${DATA[contador].webformatURL})`
+                        contador+=1;
+                    }
+                    else{
+                        return contador = 0;
+                    }
+                },10000)
+            })
+        
+            const RelojId = document.getElementById("Reloj");
+            const Hora = ()=>{
+                const Fecha = new Date()
+                var HoraActual = (`${Fecha.getHours()}:${Fecha.getMinutes()}:${Fecha.getSeconds()}`)
+                var FechaActual = (`${Fecha.getDate()}/${Fecha.getMonth()+1}/${Fecha.getFullYear()}`)
+                RelojId.innerHTML=`
+                    <div class="Año-main">
+                        <span>
+                            ${FechaActual}
+                        </span>
+                    </div>
+                    <div class="Hora-main">
+                        <span>
+                            ${HoraActual}
+                        </span>
+                    </div>
+                ` 
+            }           
+
+
+            setInterval(()=>{
+                Hora()
+            }, 1000)
+
+        }
+
+        document.getElementById("submitText").addEventListener("click", e =>{
+            e.preventDefault();
+            const value = document.getElementById("input-text").value
+            main(value)
+        })
+        document.getElementById("img-1").addEventListener("click", e =>{
+            e.preventDefault();
+            main("dog")
+        })
+        document.getElementById("img-2").addEventListener("click", e =>{
+            e.preventDefault();
+            main("rose")
+        })
+        document.getElementById("img-3").addEventListener("click", e =>{
+            e.preventDefault();
+            main("scenery")
+        })
+        document.getElementById("img-4").addEventListener("click", e =>{
+            e.preventDefault();
+            main("cat")
+        })
+        
+        
+    </script>
+</body>
+</html>
